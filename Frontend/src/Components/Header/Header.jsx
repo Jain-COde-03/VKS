@@ -11,11 +11,11 @@ const Header = () => {
     return (
         <>
         <div className='flex flex-col gap-0'>
-                <header className="flex items-center justify-center h-8 text-sm text-white px-4 py-2 bg-primary">
+                <header className="flex items-center justify-center h-6 text-[12px] text-white px-4 py-2 bg-primary">
                     Due to high demand, delivery times may be longer than usual. We appreciate your patience and understanding.
                 </header>
-                <header className="flex items-center justify-between px-4 py-2 border-b-gray-100 border-b-2 bg-white h-10">
-                    <div className="text-sm flex gap-3 text-gray-600 font-medium">
+                <header className="flex items-center font-medium text-sm justify-between px-3 py-2 border-b-gray-100 border-b-2  h-8">
+                    <div className="text-sm flex gap-3 text-gray-600 font-medium items-center">
                         <div className="about"><a href="#About">About US</a></div><span>|</span>
                         <div className="account"><Link to="/account" className='hover:text-primary-light transition-all text-gray-600 '>My Account</Link></div><span>|</span>
                         <div className="wish"><Link to="/wishlist" className='hover:text-primary-light transition-all text-gray-600 '>Wishlist</Link></div><span>|</span>
@@ -23,12 +23,12 @@ const Header = () => {
 
                     </div>
 
-                    <div className="middle text-gray-500">
+                    <div className="middle text-gray-500 w-auto text-sm flex items-center gap-1">
                         <span>👍</span>100% Genuine Products and Safe Delivery
                     </div>
 
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <div className="help"><Link to="/help" className='hover:text-primary-light transition-all text-gray-600 font-bold'>Need Help? Call Us :<span className='text-primary-light hover:text-primary '>+91 1234567890</span></Link></div>
+                    <div className="flex items-center gap-3 text-sm text-gray-600 px-2">
+                        <div className="help"><Link to="/help" className='hover:text-primary-light transition-all text-sm text-gray-600 font-bold'>Need Help? Call Us :<span className='text-primary-light hover:text-primary '>+91 1234567890</span></Link></div>
                         
                         <div className="lang">
                             <button
