@@ -1,30 +1,33 @@
-/* eslint-disable no-unused-vars */
-import React from 'react'
-import { IoIosSearch } from "react-icons/io";
-import { IoMdMic } from "react-icons/io";
-import Button from '@mui/material/Button';
+import { IoIosSearch } from 'react-icons/io'
+import { IoMdMic } from 'react-icons/io'
 import IconButton from '@mui/material/IconButton'
-import { styled } from '@mui/material/styles';
 
-
-const Search = ({ value = "", onChange = () => {}, placeholder = "Search..." }) => {
+const Search = ({ value, onChange, placeholder = 'Search for groceries, snacks, or drinks', width = 'w-auto' }) => {
     return (
-        <div className='flex gap-2 items-center w-auto bg-gray-100 border border-gray-300 rounded-4xl py-1 px-2'>
-            <IconButton aria-label="Search" size='medium' color='success'>
-                <IoIosSearch />
-            </IconButton>
-            <div className='flex items-center w-100'>
-                <input
-                    type="text"
-                    placeholder={placeholder}
-                    className='bg-transparent border-none focus:outline-none w-full'
-                    value={value}
-                    onChange={(event) => onChange(event.target.value)}
-                />
-                <span className='text-gray-400 text-lg align-text-top'>|</span>
+        <div
+            className={`group flex min-w-0 items-center gap-2 ${width} rounded-[24px] border border-emerald-100 bg-white/95 px-2 py-1.5 shadow-[0_10px_30px_rgba(34,197,94,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_40px_rgba(34,197,94,0.12)] focus-within:border-primary focus-within:ring-4 focus-within:ring-emerald-100`}
+        >
+            <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-sm sm:h-11 sm:w-11'>
+                <IoIosSearch className='text-xl sm:text-2xl' />
             </div>
-            <IconButton aria-label="Microphone" size='medium' color='success'>
-                <IoMdMic fontSize={['22px']} />
+
+            <div className='flex min-w-0 flex-1 items-center'>
+                <input
+                    type='text'
+                    placeholder={placeholder}
+                    className='w-full min-w-0 bg-transparent pr-2 text-[13px] font-medium text-gray-700 placeholder:text-gray-400 focus:outline-none sm:pr-3 sm:text-sm md:text-[15px]'
+                    value={value}
+                    onChange={onChange ? (event) => onChange(event.target.value) : undefined}
+                />
+                <span className='hidden text-gray-200 sm:block'>|</span>
+            </div>
+
+            <IconButton
+                aria-label='Voice search'
+                size='small'
+                className='!hidden !h-9 !w-9 !bg-emerald-50 !text-primary transition-colors duration-200 hover:!bg-emerald-100 min-[420px]:!inline-flex sm:!h-10 sm:!w-10'
+            >
+                <IoMdMic className='text-lg sm:text-xl' />
             </IconButton>
         </div>
     )
