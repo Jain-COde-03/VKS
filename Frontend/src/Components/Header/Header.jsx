@@ -39,15 +39,24 @@ const Header = () => {
 
     return (
         <div className='relative z-30 hidden md:flex flex-col'>
+<<<<<<< HEAD
             <header className='relative overflow-hidden bg-[radial-gradient(circle_at_left,rgba(255,255,255,0.18),transparent_35%),linear-gradient(90deg,#1b5e20,#2e7d32,#66bb6a)] px-4 py-2 text-white'>
                 <div className='mx-auto flex max-w-350 items-center justify-center gap-2 text-center text-[11px] font-medium tracking-[0.02em] sm:text-[12px]'>
+=======
+            <header className='relative overflow-hidden bg-[radial-gradient(circle_at_left,_rgba(255,255,255,0.18),_transparent_35%),linear-gradient(90deg,_#1b5e20,_#2e7d32,_#66bb6a)] px-4 py-2 text-white'>
+                <div className='mx-auto flex max-w-[1400px] items-center justify-center gap-2 text-center text-[11px] font-medium tracking-[0.02em] sm:text-[12px]'>
+>>>>>>> 5afefde80985ea5867ad8afd7fac62287d09f7c9
                     <FiTruck className='shrink-0 text-sm' />
                     <span>Fresh essentials delivered fast. Peak-hour orders may take a little longer today.</span>
                 </div>
             </header>
 
             <header className='relative border-b border-emerald-100 bg-white/90 px-4 py-3 backdrop-blur-sm' onMouseLeave={closeMenus}>
+<<<<<<< HEAD
                 <div className='mx-auto flex max-w-350 flex-col gap-3 lg:flex-row lg:items-center lg:justify-between xl:relative'>
+=======
+                <div className='mx-auto flex max-w-[1400px] flex-col gap-3 lg:flex-row lg:items-center lg:justify-between xl:relative'>
+>>>>>>> 5afefde80985ea5867ad8afd7fac62287d09f7c9
                     <div className='flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-medium text-gray-600'>
                         {topLinks.map((link) => (
                             <Link key={link.label} to={link.to} className='transition-colors hover:text-primary'>
