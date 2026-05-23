@@ -16,11 +16,7 @@ const UserDashboard = ({ compact = false }) => {
                 <IconButton
                     key={label}
                     aria-label={label}
-<<<<<<< HEAD
                     className={`group rounded-full! transition-all duration-200 hover:bg-emerald-50! ${compact ? 'p-2!' : 'p-2.5!'}`}
-=======
-                    className={`group !rounded-full transition-all duration-200 hover:!bg-emerald-50 ${compact ? '!p-2' : '!p-2.5'}`}
->>>>>>> 5afefde80985ea5867ad8afd7fac62287d09f7c9
                 >
                     <Badge badgeContent={count} max={99} color='primary'>
                         <Icon className={`${compact ? 'text-[1.45rem]' : 'text-[1.8rem]'} text-primary transition-transform duration-200 group-hover:scale-110`} />
