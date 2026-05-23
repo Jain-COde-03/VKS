@@ -41,6 +41,19 @@ function App() {
   };
 
   const fetchAdress = async (long, lat) => {
+    const storedLocation = localStorage.getItem("userLocation");
+    if (storedLocation) {
+      try {
+        const parsedStorage = JSON.parse(storedLocation);
+        if (parsedStorage.address) {
+          setAdress(parsedStorage.address);
+          return parsedStorage.address;
+        }
+      } catch (error) {
+        console.error("Error reading stored userLocation", error);
+      }
+    }
+
     try {
       const response = await axios.get("https://api.positionstack.com/v1/reverse", {
         params: {
