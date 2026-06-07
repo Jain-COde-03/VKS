@@ -18,15 +18,15 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Avatar from '@mui/material/Avatar'
 import Slide from '@mui/material/Slide'
-import { MyContext } from '../../App'
-import Search from './Search'
+import { AppContext } from '../../../app/providers/AppProvider'
+import Search from '../../../shared/ui/Search'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction='up' ref={ref} {...props} />
 })
 
-const Location = () => {
-    const { countryList, selectedCountry, setSelectedCountry, cityList, setCityList, fetchAdress } = React.useContext(MyContext)
+const LocationPicker = () => {
+    const { countryList, selectedCountry, setSelectedCountry, cityList, setCityList, fetchAdress } = React.useContext(AppContext)
 
     const [drop, setdrop] = useState(false)
     const [loc, setloc] = useState(() => {
@@ -339,4 +339,4 @@ const Location = () => {
     )
 }
 
-export default Location
+export default LocationPicker

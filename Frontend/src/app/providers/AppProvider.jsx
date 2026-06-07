@@ -1,13 +1,10 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import React, { useEffect, useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { createContext, useEffect, useState } from 'react'
 import axios from 'axios'
-import './App.css'
-import Home from './Pages/Home/Home'
 
-const MyContext = React.createContext()
+const AppContext = createContext(null)
 
-function App() {
+const AppProvider = ({ children }) => {
     const [countryList, setCountryList] = useState([])
     const [selectedCountry, setSelectedCountry] = useState(null)
     const [cityList, setCityList] = useState([])
@@ -44,7 +41,7 @@ function App() {
             try {
                 const parsedStorage = JSON.parse(storedLocation)
                 if (parsedStorage.address) {
-                    setAdress(parsedStorage.address)
+                    setAddress(parsedStorage.address)
                     return parsedStorage.address
                 }
             } catch (error) {
@@ -67,7 +64,7 @@ function App() {
             }
 
             const label = data.label || `${data.locality || data.region || data.country}`
-            setAdress(label)
+            setAddress(label)
 
             if (data.country) {
                 setSelectedCountry(data.country)
@@ -93,30 +90,23 @@ function App() {
     }, [selectedCountry])
 
     return (
-        <BrowserRouter>
-            <MyContext.Provider
-                value={{
-                    countryList,
-                    setCountryList,
-                    selectedCountry,
-                    setSelectedCountry,
-                    cityList,
-                    setCityList,
-                    fetchCity,
-                    fetchAdress,
-                    address,
-                    setAddress,
-                }}
-            >
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/help' element={<div>Help Center Page</div>} />
-                    <Route path='/track' element={<div>Order Tracking Page</div>} />
-                </Routes>
-            </MyContext.Provider>
-        </BrowserRouter>
+        <AppContext.Provider
+            value={{
+                address,
+                cityList,
+                countryList,
+                fetchAdress,
+                fetchCity,
+                selectedCountry,
+                setAddress,
+                setCityList,
+                setCountryList,
+                setSelectedCountry,
+            }}
+        >
+            {children}
+        </AppContext.Provider>
     )
 }
 
-export { MyContext }
-export default App
+export { AppContext, AppProvider }

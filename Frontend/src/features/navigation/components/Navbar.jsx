@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { MdMenu, MdClose } from 'react-icons/md'
-import Search from '../Common/Search'
-import Location from '../Common/Location'
-import NavLogin from '../Auth/NavLogin'
-import UserDashboard from './UserDashboard'
+import Search from '../../../shared/ui/Search'
+import NavLogin from '../../auth/components/NavLogin'
+import LocationPicker from '../../location/components/LocationPicker'
+import UserDashboard from '../../user/components/UserDashboard'
 
 const Navbar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -17,7 +17,7 @@ const Navbar = () => {
                     <div className='flex flex-col gap-3 md:hidden'>
                         <div className='flex items-center gap-3'>
                             <div className='min-w-0 flex-1'>
-                                <img src='/images/logo2.png' alt='VKS' className='h-12 w-auto max-w-full object-contain' />
+                                <img src='/images/branding/logos/logo2.png' alt='VKS' className='h-12 w-auto max-w-full object-contain' />
                             </div>
                             <UserDashboard compact />
                             <button
@@ -31,12 +31,12 @@ const Navbar = () => {
                         </div>
 
                         <Search width='w-full' value={searchQuery} onChange={setSearchQuery} />
-                        <Location />
+                        <LocationPicker />
                     </div>
 
                     <div className='hidden md:flex xl:hidden flex-col gap-4'>
                         <div className='flex items-center justify-between gap-4'>
-                            <img src='/images/logo2.png' alt='VKS' className='h-16 w-auto shrink-0 object-contain' />
+                            <img src='/images/branding/logos/logo2.png' alt='VKS' className='h-16 w-auto shrink-0 object-contain' />
                             <div className='flex min-w-0 flex-1 items-center gap-3'>
                                 <Search width='w-full' value={searchQuery} onChange={setSearchQuery} />
                                 <UserDashboard compact />
@@ -45,7 +45,7 @@ const Navbar = () => {
 
                         <div className='flex flex-wrap items-center justify-between gap-3'>
                             <div className='min-w-65 flex-1'>
-                                <Location />
+                                <LocationPicker />
                             </div>
                             <div className='shrink-0'>
                                 <NavLogin />
@@ -55,11 +55,11 @@ const Navbar = () => {
 
                     <div className='hidden xl:flex items-center gap-5 py-1 2xl:gap-6'>
                         <div className='shrink-0'>
-                            <img src='/images/logo2.png' alt='VKS' className='h-20 w-auto object-contain' />
+                            <img src='/images/branding/logos/logo2.png' alt='VKS' className='h-20 w-auto object-contain' />
                         </div>
 
                         <div className='w-70 shrink-0'>
-                            <Location />
+                            <LocationPicker />
                         </div>
 
                         <div className='min-w-0 max-w-190 flex-1'>
