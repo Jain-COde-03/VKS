@@ -1,18 +1,20 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useState, useCallback } from 'react'
 import axios from 'axios'
 
-const AppContext = createContext(null)
+export const AppContext = createContext(null)
 
 const AppProvider = ({ children }) => {
     const [countryList, setCountryList] = useState([])
     const [selectedCountry, setSelectedCountry] = useState(null)
     const [cityList, setCityList] = useState([])
     const [address, setAddress] = useState('')
+    const [cartCount, setCartCount] = useState(0)
+    const [wishlistCount, setWishlistCount] = useState(0)
+    const [error, setError] = useState(null)
 
     const apiKey = import.meta.env.VITE_POSITIONSTACK_API_KEY
 
-    const fetchCountries = async () => {
+    const fetchCountries = useCallback(async () => {
         try {
             const response = await axios.get('https://countriesnow.space/api/v0.1/countries/flag/images')
             const countries = response.data.data.map((country) => ({
@@ -20,22 +22,31 @@ const AppProvider = ({ children }) => {
                 name: country.name,
             }))
             setCountryList(countries)
-        } catch (error) {
-            console.error('Error fetching countries:', error)
+            setError(null)
+        } catch (err) {
+            console.error('Error fetching countries:', err)
+            setError('Failed to fetch countries')
         }
-    }
+    }, [])
 
-    const fetchCity = async (country) => {
+    const fetchCities = useCallback(async (country) => {
+        if (!country) {
+            setCityList([])
+            return []
+        }
         try {
             const response = await axios.post('https://countriesnow.space/api/v0.1/countries/cities', { country })
             setCityList(response.data.data)
-        } catch (error) {
-            console.error('Error fetching cities:', error)
+            setError(null)
+            return response.data.data
+        } catch (err) {
+            console.error('Error fetching cities:', err)
+            setError('Failed to fetch cities')
             return []
         }
-    }
+    }, [])
 
-    const fetchAdress = async (long, lat) => {
+    const fetchAddress = useCallback(async (long, lat) => {
         const storedLocation = localStorage.getItem('userLocation')
         if (storedLocation) {
             try {
@@ -44,9 +55,14 @@ const AppProvider = ({ children }) => {
                     setAddress(parsedStorage.address)
                     return parsedStorage.address
                 }
-            } catch (error) {
-                console.error('Error reading stored userLocation', error)
+            } catch (err) {
+                console.error('Error reading stored userLocation', err)
             }
+        }
+
+        if (!apiKey) {
+            console.warn('VITE_POSITIONSTACK_API_KEY is not configured')
+            return ''
         }
 
         try {
@@ -65,29 +81,29 @@ const AppProvider = ({ children }) => {
 
             const label = data.label || `${data.locality || data.region || data.country}`
             setAddress(label)
+            setError(null)
 
             if (data.country) {
                 setSelectedCountry(data.country)
             }
 
             return label
-        } catch (error) {
-            console.error('Error fetching address:', error)
+        } catch (err) {
+            console.error('Error fetching address:', err)
+            setError('Failed to fetch address')
             return ''
         }
-    }
+    }, [apiKey])
 
+    // Fetch countries on mount
     useEffect(() => {
         fetchCountries()
-    }, [])
+    }, [fetchCountries])
 
+    // Fetch cities when country changes
     useEffect(() => {
-        if (selectedCountry) {
-            fetchCity(selectedCountry)
-        } else {
-            setCityList([])
-        }
-    }, [selectedCountry])
+        fetchCities(selectedCountry)
+    }, [selectedCountry, fetchCities])
 
     return (
         <AppContext.Provider
@@ -95,13 +111,20 @@ const AppProvider = ({ children }) => {
                 address,
                 cityList,
                 countryList,
-                fetchAdress,
-                fetchCity,
                 selectedCountry,
+                cartCount,
+                wishlistCount,
+                error,
+                fetchAddress,
+                fetchCities,
+                fetchCountries,
                 setAddress,
                 setCityList,
                 setCountryList,
                 setSelectedCountry,
+                setCartCount,
+                setWishlistCount,
+                setError,
             }}
         >
             {children}

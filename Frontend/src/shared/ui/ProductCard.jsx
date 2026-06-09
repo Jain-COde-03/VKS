@@ -10,11 +10,7 @@ const ProductCard = ({
     rating = 4.6,
     discountLabel = '30% OFF',
 }) => {
-<<<<<<< HEAD
-    const [quantity, setQuantity] = useState(0)
-=======
     const [quantity, setQuantity] = useState(1)
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
     return (
         <article className='group min-w-55 rounded-[26px] border border-emerald-100 bg-white p-3 shadow-[0_14px_34px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_42px_rgba(34,197,94,0.12)] sm:min-w-0'>
@@ -60,11 +56,7 @@ const ProductCard = ({
                     <div className='flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-2 py-1 shadow-sm'>
                         <button
                             type='button'
-<<<<<<< HEAD
-                            onClick={() => setQuantity((count) => Math.max(0, count - 1))}
-=======
                             onClick={() => setQuantity((count) => Math.max(1, count - 1))}
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                             aria-label={`Decrease ${title} quantity`}
                             className='inline-flex h-7 w-7 items-center justify-center rounded-full bg-white text-emerald-700 shadow-sm transition-colors hover:bg-emerald-100'
                         >

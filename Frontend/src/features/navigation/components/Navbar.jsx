@@ -5,14 +5,6 @@ import Search from '../../../shared/ui/Search'
 import NavLogin from '../../auth/components/NavLogin'
 import LocationPicker from '../../location/components/LocationPicker'
 import UserDashboard from '../../user/components/UserDashboard'
-<<<<<<< HEAD
-import { carts } from '../../../data'
-
-const activeUserId = 'user_1001'
-const activeCart = carts.find((cart) => cart.user === activeUserId)
-const cartItemCount = activeCart?.items.reduce((total, item) => total + item.quantity, 0) || 0
-=======
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
 const Navbar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)

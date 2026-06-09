@@ -1,30 +1,19 @@
+import { useContext } from 'react'
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 import { MdOutlineShoppingCart } from 'react-icons/md'
 import { IoIosGitCompare, IoIosHeartEmpty } from 'react-icons/io'
-<<<<<<< HEAD
-import { carts, wishlists } from '../../../data'
-
-const activeUserId = 'user_1001'
-const activeCart = carts.find((cart) => cart.user === activeUserId)
-const activeWishlist = wishlists.find((wishlist) => wishlist.user === activeUserId)
-const cartItemCount = activeCart?.items.reduce((total, item) => total + item.quantity, 0) || 0
-const wishlistItemCount = activeWishlist?.products.length || 0
-
-const actions = [
-    { label: 'Compare', icon: IoIosGitCompare, count: 2 },
-    { label: 'Wishlist', icon: IoIosHeartEmpty, count: wishlistItemCount },
-    { label: 'Cart', icon: MdOutlineShoppingCart, count: cartItemCount },
-=======
-
-const actions = [
-    { label: 'Compare', icon: IoIosGitCompare, count: 2 },
-    { label: 'Wishlist', icon: IoIosHeartEmpty, count: 4 },
-    { label: 'Cart', icon: MdOutlineShoppingCart, count: 3 },
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
-]
+import { AppContext } from '../../../app/providers/AppProvider'
 
 const UserDashboard = ({ compact = false }) => {
+    const context = useContext(AppContext) || {}
+    const { cartCount = 0, wishlistCount = 0 } = context
+
+    const actions = [
+        { label: 'Compare', icon: IoIosGitCompare, count: 2 },
+        { label: 'Wishlist', icon: IoIosHeartEmpty, count: wishlistCount },
+        { label: 'Cart', icon: MdOutlineShoppingCart, count: cartCount },
+    ]
     return (
         <div className={`flex items-center rounded-full border border-emerald-100 bg-white/90 shadow-[0_10px_30px_rgba(15,23,42,0.06)] ${compact ? 'gap-1 p-1' : 'gap-2 p-1.5'}`}>
             {actions.map(({ label, icon: Icon, count }) => (
