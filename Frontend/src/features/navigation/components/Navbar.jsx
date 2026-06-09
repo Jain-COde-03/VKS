@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { MdMenu, MdClose } from 'react-icons/md'
 import Search from '../../../shared/ui/Search'
 import NavLogin from '../../auth/components/NavLogin'
 import LocationPicker from '../../location/components/LocationPicker'
 import UserDashboard from '../../user/components/UserDashboard'
+import { AppContext } from '../../../app/providers/AppProvider'
 
 const Navbar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
+    const context = useContext(AppContext) || {}
+    const { cartCount = 0 } = context
+    const cartItemCount = cartCount
 
     return (
         <>
@@ -124,11 +128,7 @@ const Navbar = () => {
                     <div className='rounded-[28px] border border-emerald-100 bg-white p-4 shadow-sm'>
                         <div className='flex items-center justify-between text-sm text-gray-500'>
                             <span>Cart</span>
-<<<<<<< HEAD
                             <span className='font-semibold text-gray-900'>{cartItemCount} items</span>
-=======
-                            <span className='font-semibold text-gray-900'>3 items</span>
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                         </div>
                         <div className='mt-4 flex flex-col gap-3 min-[380px]:flex-row'>
                             <button className='flex-1 rounded-full bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-200'>View Cart</button>
