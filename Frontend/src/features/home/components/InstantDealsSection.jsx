@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-<<<<<<< HEAD
 import { Link } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 import ProductCard from '../../../shared/ui/ProductCard'
@@ -9,18 +8,6 @@ const dealProducts = products
     .filter((product) => product.discountLabel)
     .sort((first, second) => second.originalPrice - second.price - (first.originalPrice - first.price))
     .slice(0, 4)
-=======
-import { FiArrowRight } from 'react-icons/fi'
-import ProductCard from '../../../shared/ui/ProductCard'
-
-const dealProducts = [
-    { title: 'Organic Bananas', imageSrc: '/images/categories/fruits/bananas.png', price: 42, originalPrice: 60, unit: '6 pcs', rating: 4.6, discountLabel: '30% OFF' },
-    { title: 'Alphonso Mangoes', imageSrc: '/images/categories/fruits/mango.png', price: 45, originalPrice: 60, unit: '1 kg', rating: 4.8, discountLabel: '25% OFF' },
-    { title: 'English Cucumber', imageSrc: '/images/categories/fruits/cucumber.png', price: 45, originalPrice: 58, unit: '500 g', rating: 4.4, discountLabel: '22% OFF' },
-    { title: 'Gourmet Cheese', imageSrc: '/images/categories/fruits/cheese.png', price: 45, originalPrice: 65, unit: '200 g', rating: 4.7, discountLabel: '30% OFF' },
-    { title: 'Pack of Local Spices', imageSrc: '/images/categories/fruits/spices.png', price: 45, originalPrice: 68, unit: '4 x 50 g', rating: 4.5, discountLabel: '34% OFF' },
-]
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
 const endTime = new Date(Date.now() + 2 * 60 * 60 * 1000 + 3 * 60 * 1000 + 18 * 1000)
 
@@ -80,30 +67,17 @@ const InstantDealsSection = () => {
                             ))}
                         </div>
 
-<<<<<<< HEAD
                         <Link to='/products' className='inline-flex items-center gap-2 text-sm font-bold text-emerald-700 transition-colors hover:text-emerald-800'>
                             See all
                             <FiArrowRight />
                         </Link>
-=======
-                        <button type='button' className='inline-flex items-center gap-2 text-sm font-bold text-emerald-700 transition-colors hover:text-emerald-800'>
-                            See all
-                            <FiArrowRight />
-                        </button>
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                     </div>
                 </div>
 
                 <div className='mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
-<<<<<<< HEAD
                     {dealProducts.map((product) => (
                         <ProductCard
                             key={product.id}
-=======
-                    {dealProducts.slice(0, 4).map((product) => (
-                        <ProductCard
-                            key={product.title}
->>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                             title={product.title}
                             imageSrc={product.imageSrc}
                             price={product.price}
