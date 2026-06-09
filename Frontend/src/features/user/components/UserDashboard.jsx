@@ -2,6 +2,7 @@ import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 import { MdOutlineShoppingCart } from 'react-icons/md'
 import { IoIosGitCompare, IoIosHeartEmpty } from 'react-icons/io'
+<<<<<<< HEAD
 import { carts, wishlists } from '../../../data'
 
 const activeUserId = 'user_1001'
@@ -14,6 +15,13 @@ const actions = [
     { label: 'Compare', icon: IoIosGitCompare, count: 2 },
     { label: 'Wishlist', icon: IoIosHeartEmpty, count: wishlistItemCount },
     { label: 'Cart', icon: MdOutlineShoppingCart, count: cartItemCount },
+=======
+
+const actions = [
+    { label: 'Compare', icon: IoIosGitCompare, count: 2 },
+    { label: 'Wishlist', icon: IoIosHeartEmpty, count: 4 },
+    { label: 'Cart', icon: MdOutlineShoppingCart, count: 3 },
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 ]
 
 const UserDashboard = ({ compact = false }) => {

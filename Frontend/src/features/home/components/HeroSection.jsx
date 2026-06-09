@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
+<<<<<<< HEAD
 import { Link } from 'react-router-dom'
 import { FiArrowRight, FiChevronLeft, FiChevronRight, FiClock, FiShoppingBag, FiTag } from 'react-icons/fi'
 import CategoryCard from '../../../shared/ui/CategoryCard'
 import { categories } from '../../../data'
+=======
+import { FiArrowRight, FiChevronLeft, FiChevronRight, FiClock, FiShoppingBag, FiTag } from 'react-icons/fi'
+import CategoryCard from '../../../shared/ui/CategoryCard'
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
 const bannerSlides = [
     {
@@ -21,7 +26,11 @@ const bannerSlides = [
         stats: ['Up to 40% off', 'New offers every day'],
         accent: 'bg-[linear-gradient(135deg,#7c2d12_0%,#ea580c_48%,#fdba74_100%)]',
         glow: 'bg-orange-200/25',
+<<<<<<< HEAD
         image: '/images/products/spices.png',
+=======
+        image: '/images/categories/fruits/thumbnail.png',
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
     },
     {
         eyebrow: 'Morning Essentials',
@@ -30,6 +39,7 @@ const bannerSlides = [
         stats: ['Breakfast-ready picks', 'Fresh stock every morning'],
         accent: 'bg-[linear-gradient(135deg,#1e3a8a_0%,#2563eb_48%,#93c5fd_100%)]',
         glow: 'bg-sky-200/25',
+<<<<<<< HEAD
         image: '/images/categories/breakfast/thumbnail.png',
     },
 ]
@@ -45,6 +55,22 @@ const categoryAccents = {
     Household: 'from-slate-100 via-zinc-50 to-white',
     Pantry: 'from-orange-100 via-yellow-50 to-white',
 }
+=======
+        image: '/images/categories/fruits/thumbnail.png',
+    },
+]
+
+const categories = [
+    { title: 'Vegetables', imageSrc: '/images/categories/vegetables/thumbnail.png', accentClass: 'from-emerald-100 via-lime-50 to-white' },
+    { title: 'Fruits', imageSrc: '/images/categories/fruits/thumbnail.png', accentClass: 'from-orange-100 via-amber-50 to-white' },
+    { title: 'Dairy', imageSrc: '/images/categories/dairy/thumbnail.png', accentClass: 'from-sky-100 via-cyan-50 to-white' },
+    { title: 'Bakery', imageSrc: '/images/categories/bakery/thumbnail.png', accentClass: 'from-amber-100 via-yellow-50 to-white' },
+    { title: 'Snacks', imageSrc: '/images/categories/snacks/thumbnail.png', accentClass: 'from-rose-100 via-pink-50 to-white' },
+    { title: 'Drinks', imageSrc: '/images/categories/drinks/thumbnail.png', accentClass: 'from-violet-100 via-fuchsia-50 to-white' },
+    { title: 'Breakfast', imageSrc: '/images/categories/breakfast/thumbnail.png', accentClass: 'from-lime-100 via-green-50 to-white' },
+    { title: 'Household', imageSrc: '/images/categories/household/thumbnail.png', accentClass: 'from-slate-100 via-zinc-50 to-white' },
+]
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
 const HeroSection = () => {
     const [activeSlide, setActiveSlide] = useState(0)
@@ -103,13 +129,22 @@ const HeroSection = () => {
                                 </div>
 
                                 <div className='mt-6 flex flex-wrap items-center gap-3'>
+<<<<<<< HEAD
                                     <Link
                                         to='/products'
+=======
+                                    <button
+                                        type='button'
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                                         className='inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-emerald-700 shadow-lg transition-transform duration-300 hover:-translate-y-0.5'
                                     >
                                         Shop now
                                         <FiArrowRight />
+<<<<<<< HEAD
                                     </Link>
+=======
+                                    </button>
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
                                     <div className='flex items-center gap-2'>
                                         {bannerSlides.map((slide, index) => (
@@ -164,14 +199,24 @@ const HeroSection = () => {
                             <p className='text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600'>Shop by Category</p>
                             <h2 className='mt-1 text-lg font-bold text-gray-900 sm:text-xl'>Pick what you need today</h2>
                         </div>
+<<<<<<< HEAD
                         <Link to='/products' className='hidden text-sm font-semibold text-emerald-700 sm:inline-flex'>
                             View all
                         </Link>
+=======
+                        <button type='button' className='hidden text-sm font-semibold text-emerald-700 sm:inline-flex'>
+                            View all
+                        </button>
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                     </div>
 
                     <div className='flex gap-2 overflow-x-auto pb-1 sm:gap-3'>
                         {categories.map((item) => (
+<<<<<<< HEAD
                             <CategoryCard key={item.id} title={item.name} imageSrc={item.image} accentClass={categoryAccents[item.name]} />
+=======
+                            <CategoryCard key={item.title} title={item.title} imageSrc={item.imageSrc} accentClass={item.accentClass} />
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                         ))}
                     </div>
                 </div>

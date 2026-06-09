@@ -5,11 +5,14 @@ import Search from '../../../shared/ui/Search'
 import NavLogin from '../../auth/components/NavLogin'
 import LocationPicker from '../../location/components/LocationPicker'
 import UserDashboard from '../../user/components/UserDashboard'
+<<<<<<< HEAD
 import { carts } from '../../../data'
 
 const activeUserId = 'user_1001'
 const activeCart = carts.find((cart) => cart.user === activeUserId)
 const cartItemCount = activeCart?.items.reduce((total, item) => total + item.quantity, 0) || 0
+=======
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
 
 const Navbar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -129,7 +132,11 @@ const Navbar = () => {
                     <div className='rounded-[28px] border border-emerald-100 bg-white p-4 shadow-sm'>
                         <div className='flex items-center justify-between text-sm text-gray-500'>
                             <span>Cart</span>
+<<<<<<< HEAD
                             <span className='font-semibold text-gray-900'>{cartItemCount} items</span>
+=======
+                            <span className='font-semibold text-gray-900'>3 items</span>
+>>>>>>> dcb7e2bdec2154d2c39af246755c319267c84981
                         </div>
                         <div className='mt-4 flex flex-col gap-3 min-[380px]:flex-row'>
                             <button className='flex-1 rounded-full bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-200'>View Cart</button>
