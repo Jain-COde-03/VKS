@@ -21,7 +21,9 @@ const Navbar = () => {
                     <div className='flex flex-col gap-3 md:hidden'>
                         <div className='flex items-center gap-3'>
                             <div className='min-w-0 flex-1'>
-                                <img src='/images/branding/logos/logo2.png' alt='VKS' className='h-12 w-auto max-w-full object-contain' />
+                                <Link to='/'>
+                                    <img src='/images/branding/logos/logo2.png' alt='VKS' className='h-12 w-auto max-w-full object-contain' />
+                                </Link>
                             </div>
                             <UserDashboard compact />
                             <button
