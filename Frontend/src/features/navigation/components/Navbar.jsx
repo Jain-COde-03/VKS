@@ -1,15 +1,16 @@
 import { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MdMenu, MdClose } from 'react-icons/md'
 import Search from '../../../shared/ui/Search'
 import NavLogin from '../../auth/components/NavLogin'
 import LocationPicker from '../../location/components/LocationPicker'
 import UserDashboard from '../../user/components/UserDashboard'
-import { AppContext } from '../../../app/providers/AppProvider'
+import { AppContext } from '../../../app/providers/AppContext'
 
 const Navbar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
+    const navigate = useNavigate()
     const context = useContext(AppContext) || {}
     const { cartCount = 0 } = context
     const cartItemCount = cartCount
@@ -107,19 +108,30 @@ const Navbar = () => {
                         <p className='text-sm text-white/80'>Hello Guest</p>
                         <p className='mt-1 text-xl font-bold'>Sign in for a better shopping experience</p>
                         <div className='mt-4 flex flex-col gap-2 min-[380px]:flex-row'>
-                            <Link to='/login' className='flex-1 rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-primary'>
+                            <Link to='/auth/login' className='flex-1 rounded-full bg-white px-4 py-2 text-center text-sm font-semibold text-primary'>
                                 Sign In
                             </Link>
-                            <Link to='/register' className='flex-1 rounded-full border border-white/30 px-4 py-2 text-center text-sm font-semibold text-white'>
+                            <Link to='/auth/register' className='flex-1 rounded-full border border-white/30 px-4 py-2 text-center text-sm font-semibold text-white'>
                                 Register
                             </Link>
                         </div>
                     </div>
 
                     <div className='space-y-3'>
-                        {['Wishlist', 'Order History', 'Track Order', 'Saved Addresses', 'Help Center'].map((item) => (
+                        {[
+                            ['Wishlist', '/wishlist'],
+                            ['Order History', '/account'],
+                            ['Track Order', '/track'],
+                            ['Saved Addresses', '/account'],
+                            ['Help Center', '/help'],
+                        ].map(([item, to]) => (
                             <button
                                 key={item}
+                                type='button'
+                                onClick={() => {
+                                    setSidebarOpen(false)
+                                    navigate(to)
+                                }}
                                 className='w-full rounded-2xl border border-emerald-100 bg-white px-4 py-3 text-left text-base font-semibold text-gray-800 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-emerald-50'
                             >
                                 {item}
@@ -133,8 +145,8 @@ const Navbar = () => {
                             <span className='font-semibold text-gray-900'>{cartItemCount} items</span>
                         </div>
                         <div className='mt-4 flex flex-col gap-3 min-[380px]:flex-row'>
-                            <button className='flex-1 rounded-full bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-200'>View Cart</button>
-                            <button className='flex-1 rounded-full border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50'>Checkout</button>
+                            <button type='button' onClick={() => navigate('/cart')} className='flex-1 rounded-full bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-200'>View Cart</button>
+                            <button type='button' onClick={() => navigate('/checkout')} className='flex-1 rounded-full border border-emerald-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50'>Checkout</button>
                         </div>
                     </div>
                 </div>

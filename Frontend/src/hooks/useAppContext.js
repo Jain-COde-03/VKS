@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { AppContext } from '../app/providers/AppProvider'
+import { AppContext } from '../app/providers/AppContext'
 
 /**
  * Custom hook to access app context

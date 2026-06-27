@@ -165,13 +165,18 @@ const ProductListingPage = () => {
                                     {filteredProducts.map((product) => (
                                         <ProductCard
                                             key={product.id}
+                                            id={product.id}
                                             title={product.title}
+                                            brand={product.brand}
+                                            category={product.category}
                                             imageSrc={product.imageSrc}
                                             price={product.price}
                                             originalPrice={product.originalPrice}
                                             unit={product.unit}
                                             rating={product.rating}
                                             discountLabel={product.discountLabel}
+                                            stock={product.stock}
+                                            tags={product.tags}
                                         />
                                     ))}
                                 </div>

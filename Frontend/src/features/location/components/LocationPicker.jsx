@@ -18,7 +18,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import Avatar from '@mui/material/Avatar'
 import Slide from '@mui/material/Slide'
-import { AppContext } from '../../../app/providers/AppProvider'
+import { AppContext } from '../../../app/providers/AppContext'
 import Search from '../../../shared/ui/Search'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -26,7 +26,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 const LocationPicker = () => {
-    const { countryList, selectedCountry, setSelectedCountry, cityList, setCityList, fetchAdress } = React.useContext(AppContext)
+    const { countryList, selectedCountry, setSelectedCountry, cityList, setCityList, fetchAddress } = React.useContext(AppContext)
 
     const [drop, setdrop] = useState(false)
     const [loc, setloc] = useState(() => {
@@ -83,7 +83,7 @@ const LocationPicker = () => {
                 const coordsLabel = `Lat: ${Number(lat).toFixed(4)}, Lon: ${Number(lon).toFixed(4)}`
 
                 try {
-                    const address = await fetchAdress(lon, lat)
+                    const address = await fetchAddress(lon, lat)
                     if (address) {
                         setloc(address)
                         localStorage.setItem('userLocation', JSON.stringify({ address }))
