@@ -1,0 +1,12 @@
+# Example Render service spec for the Backend (Web Service)
+# Create a new Web Service on Render and connect to this repo, or use the CLI.
+name: vks-backend
+type: web
+env: node
+buildCommand: "npm install"
+startCommand: "npm run start"
+region: oregon
+plan: starter
+
+# Environment variables should be configured in the Render dashboard
+# MONGODB_URI, JWT_SECRET, FRONTEND_URL, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET

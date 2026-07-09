@@ -1,34 +1,77 @@
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import axios from 'axios'
-import { carts, products, users, wishlists } from '../../data'
+import API from '../../services/api'
+import authTokenStore from '../../services/authTokenStore'
 import { AppContext } from './AppContext'
 
+const normalizeProduct = (product = {}) => ({
+    id: product.productId ?? product.id,
+    productId: product.productId ?? product.id,
+    title: product.title || 'Unknown product',
+    brand: product.brand || 'VKS Select',
+    category: product.category || 'General',
+    imageSrc: product.imageSrc || product.image || '/images/categories/fruits/thumbnail.png',
+    price: product.price ?? 0,
+    originalPrice: product.originalPrice ?? product.price ?? 0,
+    unit: product.unit || '1 pack',
+    rating: product.rating ?? 0,
+    discountLabel: product.discountLabel || '',
+    stock: product.stock ?? 0,
+    tags: product.tags || [],
+})
+
+const normalizeCartItem = (item = {}) => ({
+    id: item.productId ?? item.id,
+    productId: item.productId ?? item.id,
+    title: item.title,
+    brand: item.brand,
+    category: item.category,
+    imageSrc: item.imageSrc,
+    price: item.price,
+    originalPrice: item.originalPrice ?? item.price,
+    unit: item.unit,
+    rating: item.rating ?? 0,
+    discountLabel: item.discountLabel ?? '',
+    stock: item.stock ?? 0,
+    tags: item.tags || [],
+    quantity: item.quantity ?? 1,
+})
+
+const normalizeWishlistItem = (item = {}) => ({
+    id: item.productId ?? item.id,
+    productId: item.productId ?? item.id,
+    title: item.title,
+    brand: item.brand,
+    category: item.category,
+    imageSrc: item.imageSrc,
+    price: item.price,
+    originalPrice: item.originalPrice ?? item.price,
+    unit: item.unit,
+    rating: item.rating ?? 0,
+    discountLabel: item.discountLabel ?? '',
+    stock: item.stock ?? 0,
+    tags: item.tags || [],
+})
+
 const AppProvider = ({ children }) => {
-    const defaultUser = users[0]
-    const defaultCart = carts.find((cart) => cart.user === defaultUser.id)
-    const defaultWishlist = wishlists.find((wishlist) => wishlist.user === defaultUser.id)
     const [countryList, setCountryList] = useState([])
     const [selectedCountry, setSelectedCountry] = useState(null)
     const [cityList, setCityList] = useState([])
     const [address, setAddress] = useState('')
-    const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem('user')
-        return storedUser ? JSON.parse(storedUser) : null
+    const [user, setUser] = useState(null)
+    const [authToken, setAuthToken] = useState(null)
+    const [products, setProducts] = useState([])
+    const [orders, setOrders] = useState(() => {
+        const storedOrders = localStorage.getItem('orders')
+        return storedOrders ? JSON.parse(storedOrders) : []
     })
     const [cartItems, setCartItems] = useState(() => {
         const storedCart = localStorage.getItem('cartItems')
-        if (storedCart) return JSON.parse(storedCart)
-
-        return (defaultCart?.items || []).map((item) => ({
-            ...products.find((product) => product.id === item.product),
-            quantity: item.quantity,
-        })).filter(Boolean)
+        return storedCart ? JSON.parse(storedCart) : []
     })
     const [wishlistItems, setWishlistItems] = useState(() => {
         const storedWishlist = localStorage.getItem('wishlistItems')
-        if (storedWishlist) return JSON.parse(storedWishlist)
-
-        return (defaultWishlist?.products || []).map((productId) => products.find((product) => product.id === productId)).filter(Boolean)
+        return storedWishlist ? JSON.parse(storedWishlist) : []
     })
     const [error, setError] = useState(null)
 
@@ -115,13 +158,88 @@ const AppProvider = ({ children }) => {
         }
     }, [apiKey])
 
+    useEffect(() => {
+        API.defaults.headers.common.Authorization = authToken ? `Bearer ${authToken}` : ''
+    }, [authToken])
+
+    const loadProducts = useCallback(async () => {
+        try {
+            const response = await API.get('/products')
+            setProducts((response.data.products || []).map(normalizeProduct))
+        } catch (err) {
+            console.warn('Product API unavailable, using local fallback')
+        }
+    }, [])
+
+    const loadUserData = useCallback(async () => {
+        if (!authToken) return
+
+        try {
+            const [cartResponse, wishlistResponse, ordersResponse] = await Promise.all([
+                API.get('/cart'),
+                API.get('/wishlist'),
+                API.get('/orders'),
+            ])
+
+            setCartItems((cartResponse.data.items || []).map(normalizeCartItem))
+            setWishlistItems((wishlistResponse.data.items || []).map(normalizeWishlistItem))
+            setOrders(ordersResponse.data.orders || [])
+        } catch (err) {
+            console.error('Failed to load user data:', err)
+        }
+    }, [authToken])
+
+    useEffect(() => {
+        loadProducts()
+    }, [loadProducts])
+
+    useEffect(() => {
+        loadUserData()
+    }, [loadUserData])
+
+    // Subscribe to in-memory token changes so app state stays in sync
+    useEffect(() => {
+        const unsub = authTokenStore.subscribe((t) => setAuthToken(t))
+        const userHandler = (e) => {
+            if (e?.detail) setUser(e.detail)
+        }
+        window.addEventListener('auth:user', userHandler)
+        return () => {
+            if (unsub) unsub()
+            window.removeEventListener('auth:user', userHandler)
+        }
+    }, [])
+
+    // Attempt silent refresh on mount to restore session from refresh cookie
+    useEffect(() => {
+        let mounted = true
+        const tryRefresh = async () => {
+            try {
+                const resp = await API.post('/auth/refresh')
+                const newToken = resp.data?.token
+                const newUser = resp.data?.user
+                if (newToken) {
+                    authTokenStore.setToken(newToken)
+                }
+                if (mounted && newUser) setUser(newUser)
+            } catch (err) {
+                // ignore — not authenticated
+            }
+        }
+
+        tryRefresh()
+        return () => { mounted = false }
+    }, [])
+
     // Fetch countries on mount
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchCountries()
     }, [fetchCountries])
 
     // Fetch cities when country changes
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchCities(selectedCountry)
     }, [selectedCountry, fetchCities])
 
@@ -133,6 +251,10 @@ const AppProvider = ({ children }) => {
         localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems))
     }, [wishlistItems])
 
+    useEffect(() => {
+        localStorage.setItem('orders', JSON.stringify(orders))
+    }, [orders])
+
     const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0)
     const wishlistCount = wishlistItems.length
 
@@ -140,99 +262,206 @@ const AppProvider = ({ children }) => {
         return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
     }, [cartItems])
 
-    const login = useCallback((email) => {
-        const matchedUser = users.find((account) => account.email.toLowerCase() === email.toLowerCase()) || defaultUser
-        setUser(matchedUser)
-        localStorage.setItem('user', JSON.stringify(matchedUser))
-        localStorage.setItem('authToken', 'demo-token')
-        return matchedUser
-    }, [defaultUser])
-
-    const register = useCallback((profile) => {
-        const newUser = {
-            id: `user_${Date.now()}`,
-            name: profile.name,
-            email: profile.email,
-            phone: profile.phone,
-            role: 'customer',
-            isVerified: true,
+    const login = useCallback(async (email) => {
+        try {
+            const response = await API.post('/auth/login', { email })
+            const { user: loggedInUser, token } = response.data
+            setUser(loggedInUser)
+            setAuthToken(token)
+            authTokenStore.setToken(token)
+            return loggedInUser
+        } catch (err) {
+            const message = err.response?.data?.message || 'Unable to login'
+            setError(message)
+            throw new Error(message)
         }
-        setUser(newUser)
-        localStorage.setItem('user', JSON.stringify(newUser))
-        localStorage.setItem('authToken', 'demo-token')
-        return newUser
+    }, [])
+
+    const register = useCallback(async (profile) => {
+        try {
+            const response = await API.post('/auth/register', profile)
+            const { user: registeredUser, token } = response.data
+            setUser(registeredUser)
+            setAuthToken(token)
+            authTokenStore.setToken(token)
+            return registeredUser
+        } catch (err) {
+            const message = err.response?.data?.message || 'Unable to register'
+            setError(message)
+            throw new Error(message)
+        }
     }, [])
 
     const logout = useCallback(() => {
         setUser(null)
-        localStorage.removeItem('user')
-        localStorage.removeItem('authToken')
+        setAuthToken(null)
+        authTokenStore.clearToken()
+        API.post('/auth/logout').catch(() => {})
     }, [])
 
-    const addToCart = useCallback((product, quantity = 1) => {
+    const createOrder = useCallback(async ({ paymentMethod, shippingAddress }) => {
+        const payload = {
+            paymentMethod: paymentMethod || 'cod',
+            shippingAddress,
+        }
+
+        try {
+            const response = user && authToken
+                ? await API.post('/orders', payload)
+                : await API.post('/orders/guest', {
+                    ...payload,
+                    items: cartItems.map(normalizeCartItem),
+                })
+
+            const order = response.data.order
+            setOrders((prevOrders) => [order, ...prevOrders])
+            setCartItems([])
+            return order.orderNumber
+        } catch (err) {
+            const message = err.response?.data?.message || 'Unable to create order'
+            setError(message)
+            throw new Error(message)
+        }
+    }, [authToken, cartItems, user])
+
+    const addToCart = useCallback(async (product, quantity = 1) => {
+        const item = normalizeCartItem({ ...product, quantity })
+
         setCartItems((items) => {
-            const existingItem = items.find((item) => item.id === product.id)
+            const existingItem = items.find((current) => current.productId === item.productId)
             if (existingItem) {
-                return items.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item)
+                return items.map((current) => current.productId === item.productId ? { ...current, quantity: current.quantity + quantity } : current)
             }
 
-            return [...items, { ...product, quantity }]
+            return [...items, item]
         })
-    }, [])
 
-    const updateCartItem = useCallback((productId, quantity) => {
+        if (!authToken) return
+
+        try {
+            await API.post('/cart/add', { productId: item.productId, quantity })
+        } catch (err) {
+            console.error('Cart add failed:', err)
+        }
+    }, [authToken])
+
+    const updateCartItem = useCallback(async (productId, quantity) => {
         setCartItems((items) => {
-            if (quantity <= 0) return items.filter((item) => item.id !== productId)
-            return items.map((item) => item.id === productId ? { ...item, quantity } : item)
+            if (quantity <= 0) return items.filter((item) => item.productId !== productId)
+            return items.map((item) => item.productId === productId ? { ...item, quantity } : item)
         })
-    }, [])
 
-    const removeFromCart = useCallback((productId) => {
-        setCartItems((items) => items.filter((item) => item.id !== productId))
-    }, [])
+        if (!authToken) return
 
-    const clearCart = useCallback(() => {
+        try {
+            await API.put(`/cart/${productId}`, { quantity })
+        } catch (err) {
+            console.error('Cart update failed:', err)
+        }
+    }, [authToken])
+
+    const removeFromCart = useCallback(async (productId) => {
+        setCartItems((items) => items.filter((item) => item.productId !== productId))
+
+        if (!authToken) return
+
+        try {
+            await API.delete(`/cart/${productId}`)
+        } catch (err) {
+            console.error('Cart delete failed:', err)
+        }
+    }, [authToken])
+
+    const clearCart = useCallback(async () => {
         setCartItems([])
-    }, [])
 
-    const toggleWishlist = useCallback((product) => {
+        if (!authToken) return
+
+        try {
+            await API.delete('/cart/clear/all')
+        } catch (err) {
+            console.error('Cart clear failed:', err)
+        }
+    }, [authToken])
+
+    const toggleWishlist = useCallback(async (product) => {
+        const item = normalizeWishlistItem(product)
+
         setWishlistItems((items) => {
-            const exists = items.some((item) => item.id === product.id)
-            return exists ? items.filter((item) => item.id !== product.id) : [...items, product]
+            const exists = items.some((current) => current.productId === item.productId)
+            return exists ? items.filter((current) => current.productId !== item.productId) : [...items, item]
         })
-    }, [])
+
+        if (!authToken) return
+
+        try {
+            const exists = wishlistItems.some((current) => current.productId === item.productId)
+            if (exists) {
+                await API.delete(`/wishlist/${item.productId}`)
+            } else {
+                await API.post('/wishlist/add', { productId: item.productId })
+            }
+        } catch (err) {
+            console.error('Wishlist update failed:', err)
+        }
+    }, [authToken, wishlistItems])
+
+    const value = useMemo(() => ({
+        address,
+        cityList,
+        countryList,
+        selectedCountry,
+        cartCount,
+        cartItems,
+        cartSubtotal,
+        wishlistCount,
+        wishlistItems,
+        user,
+        error,
+        addToCart,
+        clearCart,
+        fetchAddress,
+        fetchCities,
+        fetchCountries,
+        login,
+        logout,
+        register,
+        removeFromCart,
+        setAddress,
+        setCityList,
+        setCountryList,
+        setSelectedCountry,
+        setError,
+        toggleWishlist,
+        updateCartItem,
+    }), [
+        addToCart,
+        address,
+        cartCount,
+        cartItems,
+        cartSubtotal,
+        cityList,
+        clearCart,
+        countryList,
+        error,
+        fetchAddress,
+        fetchCities,
+        fetchCountries,
+        login,
+        logout,
+        register,
+        removeFromCart,
+        selectedCountry,
+        toggleWishlist,
+        updateCartItem,
+        user,
+        wishlistCount,
+        wishlistItems,
+    ])
 
     return (
         <AppContext.Provider
-            value={{
-                address,
-                cityList,
-                countryList,
-                selectedCountry,
-                cartCount,
-                cartItems,
-                cartSubtotal,
-                wishlistCount,
-                wishlistItems,
-                user,
-                error,
-                addToCart,
-                clearCart,
-                fetchAddress,
-                fetchCities,
-                fetchCountries,
-                login,
-                logout,
-                register,
-                removeFromCart,
-                setAddress,
-                setCityList,
-                setCountryList,
-                setSelectedCountry,
-                setError,
-                toggleWishlist,
-                updateCartItem,
-            }}
+            value={value}
         >
             {children}
         </AppContext.Provider>

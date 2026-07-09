@@ -49,3 +49,28 @@
   --gradient-offer:
     linear-gradient(135deg, #FB8C00, #FFD54F);
 }
+
+@keyframes cart-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(-3.5rem) scale(0.82) rotate(-8deg);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateX(calc(100% + 7rem)) scale(1) rotate(0deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(calc(100% + 9rem)) scale(0.9) rotate(6deg);
+  }
+}
+
+.animate-cart-slide {
+  animation: cart-slide 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}

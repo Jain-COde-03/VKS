@@ -18,7 +18,7 @@ const UserDashboard = ({ compact = false }) => {
     ]
     return (
         <div className={`flex items-center rounded-full border border-emerald-100 bg-white/90 shadow-[0_10px_30px_rgba(15,23,42,0.06)] ${compact ? 'gap-1 p-1' : 'gap-2 p-1.5'}`}>
-            {actions.map(({ label, icon: Icon, count }) => (
+            {actions.map(({ label, icon: Icon, count, to }) => (
                 <IconButton
                     key={label}
                     aria-label={label}

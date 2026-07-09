@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { FiHeart, FiMinus, FiPlus, FiStar } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
+import { FiCheck, FiHeart, FiMinus, FiPlus, FiShoppingCart, FiStar } from 'react-icons/fi'
 import { useAppContext } from '../../hooks'
 
 const ProductCard = ({
@@ -17,12 +18,15 @@ const ProductCard = ({
     tags = [],
 }) => {
     const [quantity, setQuantity] = useState(1)
+    const [isAdding, setIsAdding] = useState(false)
     const { addToCart, toggleWishlist, wishlistItems } = useAppContext()
     const product = { id, title, brand, category, imageSrc, price, originalPrice, unit, rating, discountLabel, stock, tags }
     const isWishlisted = wishlistItems.some((item) => item.id === id)
 
     const handleAddToCart = () => {
         addToCart(product, quantity)
+        setIsAdding(true)
+        window.setTimeout(() => setIsAdding(false), 850)
     }
 
     return (
@@ -41,25 +45,27 @@ const ProductCard = ({
                     <FiHeart className={`text-sm ${isWishlisted ? 'fill-current' : ''}`} />
                 </button>
 
-                <div className='flex h-38 items-center justify-center'>
+                <Link to={`/products/${id}`} className='flex h-38 items-center justify-center' aria-label={`View details for ${title}`}>
                     <img
                         src={imageSrc}
                         alt={title}
                         className='h-30 w-30 object-contain transition-transform duration-300 group-hover:scale-105'
                     />
-                </div>
+                </Link>
             </div>
 
             <div className='mt-3'>
-                <div className='flex items-center gap-1 text-amber-400'>
+                <Link to={`/products/${id}`} className='flex items-center gap-1 text-amber-400' aria-label={`View details for ${title}`}>
                     {Array.from({ length: 5 }).map((_, index) => (
                         <FiStar key={index} className={`text-[13px] ${index < Math.round(rating) ? 'fill-current' : ''}`} />
                     ))}
                     <span className='ml-1 text-xs font-semibold text-slate-500'>{rating}</span>
-                </div>
+                </Link>
 
-                <h3 className='mt-2 line-clamp-2 text-base font-bold leading-5 text-slate-900'>{title}</h3>
-                <p className='mt-1 text-sm font-medium text-slate-500'>{unit}</p>
+                <Link to={`/products/${id}`} className='mt-2 block'>
+                    <h3 className='line-clamp-2 text-base font-bold leading-5 text-slate-900 transition-colors hover:text-emerald-700'>{title}</h3>
+                    <p className='mt-1 text-sm font-medium text-slate-500'>{unit}</p>
+                </Link>
 
                 <div className='mt-3 flex items-end justify-between gap-3'>
                     <div>
@@ -93,9 +99,19 @@ const ProductCard = ({
                 <button
                     type='button'
                     onClick={handleAddToCart}
-                    className='mt-4 w-full rounded-full bg-emerald-600 px-4 py-2.5 text-sm font-black text-white transition-colors hover:bg-emerald-700'
+                    className={`relative mt-4 flex h-11 w-full items-center justify-center overflow-hidden rounded-full px-4 py-2.5 text-sm font-black text-white transition-all duration-200 hover:bg-emerald-700 ${isAdding ? 'scale-[0.98] bg-emerald-700 shadow-[0_12px_26px_rgba(34,197,94,0.22)]' : 'bg-emerald-600'}`}
                 >
-                    Add to cart
+                    <span className={`absolute left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-emerald-700 shadow-sm ${isAdding ? 'animate-cart-slide' : '-translate-x-14 opacity-0'}`}>
+                        {isAdding ? <FiShoppingCart className='text-base' /> : null}
+                    </span>
+                    <span className={`inline-flex items-center gap-2 transition-all duration-200 ${isAdding ? 'translate-x-3 opacity-0' : 'translate-x-0 opacity-100'}`}>
+                        <FiShoppingCart className='text-base' />
+                        Add to cart
+                    </span>
+                    <span className={`absolute inline-flex items-center gap-2 transition-all duration-200 ${isAdding ? 'translate-x-0 opacity-100 delay-150' : '-translate-x-3 opacity-0'}`}>
+                        <FiCheck className='text-base' />
+                        Added
+                    </span>
                 </button>
             </div>
         </article>
